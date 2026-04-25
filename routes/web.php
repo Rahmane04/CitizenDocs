@@ -47,3 +47,10 @@ Route::middleware(['auth', 'role:agent'])->prefix('agent')->name('agent.')->grou
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', fn() => view('admin.dashboard'))->name('dashboard');
 });
+use App\Http\Controllers\DemandeController;
+
+Route::middleware(['auth', 'role:citoyen'])->prefix('citoyen')->name('citoyen.')->group(function () {
+    Route::get('/demandes',        [DemandeController::class, 'index'])->name('demandes.index');
+    Route::get('/demandes/create', [DemandeController::class, 'create'])->name('demandes.create');
+    Route::post('/demandes',       [DemandeController::class, 'store'])->name('demandes.store');
+});
