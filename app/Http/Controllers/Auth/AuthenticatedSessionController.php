@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
+use App\Http\Requests\Auth\LoginRequest;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -13,29 +15,19 @@ class AuthenticatedSessionController extends Controller
         return view('auth.login');
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'email'    => 'required|email',
-            'password' => 'required',
-        ]);
+public function store(LoginRequest $request)
+{
+    $request->authenticate();
+    $request->session()->regenerate();
 
-        if (!Auth::attempt($request->only('email', 'password'))) {
-            return back()->withErrors([
-                'email' => 'Email ou mot de passe incorrect.',
-            ]);
-        }
+    $role = auth()->user()->role;
 
-        $request->session()->regenerate();
-
-        $role = auth()->user()->role;
-
-        return match($role) {
-            'admin'  => redirect()->route('admin.dashboard'),
-            'agent'  => redirect()->route('agent.dashboard'),
-            default  => redirect()->route('citoyen.dashboard'),
-        };
-    }
+    return match($role) {
+        'admin'  => redirect()->route('admin.dashboard'),
+        'agent'  => redirect()->route('agent.dashboard'),
+        default  => redirect()->route('citoyen.dashboard'),
+    };
+}
 
     public function destroy(Request $request)
     {

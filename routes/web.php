@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
-
+use Inertia\Inertia;
 /*
 |--------------------------------------------------------------------------
 | Routes publiques
@@ -27,7 +27,9 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'role:citoyen'])->prefix('citoyen')->name('citoyen.')->group(function () {
-    Route::get('/dashboard', fn() => view('citoyen.dashboard'))->name('dashboard');
+    Route::get('/dashboard', function() {
+        return view('layouts.app');
+    })->name('dashboard');
 });
 
 /*

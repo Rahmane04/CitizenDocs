@@ -1,7 +1,5 @@
-import './bootstrap';
+import './bootstrap.js'
+import { createApp } from 'vue'
+import Dashboard from './Pages/Citoyen/Dashboard.vue'
 
-import Alpine from 'alpinejs';
-
-window.Alpine = Alpine;
-
-Alpine.start();
+createApp(Dashboard).mount('#app')
