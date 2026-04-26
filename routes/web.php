@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\DemandeController;
 use App\Http\Controllers\Agent\TraitementController;
+use App\Http\Controllers\Admin\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -60,4 +61,13 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/dashboard', function() {
         return view('layouts.app', ['user' => auth()->user()]);
     })->name('dashboard');
+    Route::get('/users', [AdminController::class, 'users'])->name('users');
+    Route::post('/users/{user}/toggle', [AdminController::class, 'toggleUser'])->name('users.toggle');
+    Route::get('/type-documents', [AdminController::class, 'typeDocuments'])->name('type_documents');
+    Route::get('/type-documents/create', [AdminController::class, 'createTypeDocument'])->name('type_documents.create');
+    Route::post('/type-documents', [AdminController::class, 'storeTypeDocument'])->name('type_documents.store');
+    Route::get('/type-documents/{typeDocument}/edit', [AdminController::class, 'editTypeDocument'])->name('type_documents.edit');
+    Route::put('/type-documents/{typeDocument}', [AdminController::class, 'updateTypeDocument'])->name('type_documents.update');
+    Route::delete('/type-documents/{typeDocument}', [AdminController::class, 'destroyTypeDocument'])->name('type_documents.destroy');
+    Route::get('/rapports', [AdminController::class, 'rapports'])->name('rapports');
 });
