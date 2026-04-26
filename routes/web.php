@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\DemandeController;
+use App\Http\Controllers\Agent\TraitementController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +46,9 @@ Route::middleware(['auth', 'role:agent'])->prefix('agent')->name('agent.')->grou
     Route::get('/dashboard', function() {
         return view('layouts.app', ['user' => auth()->user()]);
     })->name('dashboard');
+    Route::get('/demandes', [TraitementController::class, 'index'])->name('demandes.index');
+    Route::get('/demandes/{demande}', [TraitementController::class, 'show'])->name('demandes.show');
+    Route::post('/demandes/{demande}/traiter', [TraitementController::class, 'traiter'])->name('demandes.traiter');
 });
 
 /*
