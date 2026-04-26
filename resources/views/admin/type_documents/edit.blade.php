@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('layouts.app')
 @section('content')
 
 <h2 class="mb-4">✏️ Modifier un type de document</h2>

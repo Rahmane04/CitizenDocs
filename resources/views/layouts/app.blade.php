@@ -33,34 +33,68 @@
             <div class="flex flex-1">
                 {{-- Sidebar --}}
                 <aside class="w-60 bg-blue-800 text-white flex flex-col py-6 px-3">
-                    <p class="text-xs text-blue-300 uppercase tracking-widest font-semibold px-3 mb-4">Navigation</p>
+    <p class="text-xs text-blue-300 uppercase tracking-widest font-semibold px-3 mb-4">Navigation</p>
 
-                    @if(auth()->user()?->role === 'agent')
-                        <a href="{{ route('agent.dashboard') }}"
-                           class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-blue-700 text-sm">
-                            🏠 Accueil
-                        </a>
-                        <a href="{{ route('agent.demandes.index') }}"
-                           class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-blue-700 text-sm
-                           {{ request()->routeIs('agent.demandes.*') ? 'bg-blue-600 font-semibold' : '' }}">
-                            📋 Demandes
-                        </a>
-                    @elseif(auth()->user()?->role === 'citoyen')
-                        <a href="{{ route('citoyen.dashboard') }}"
-                           class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-blue-700 text-sm">
-                            🏠 Accueil
-                        </a>
-                        <a href="{{ route('citoyen.demandes.index') }}"
-                           class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-blue-700 text-sm
-                           {{ request()->routeIs('citoyen.demandes.*') ? 'bg-blue-600 font-semibold' : '' }}">
-                            📄 Mes demandes
-                        </a>
-                        <a href="{{ route('citoyen.demandes.create') }}"
-                           class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-blue-700 text-sm">
-                            ➕ Nouvelle demande
-                        </a>
-                    @endif
+    @if(auth()->user()?->role === 'agent')
+        <a href="{{ route('agent.dashboard') }}"
+           class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-blue-700 text-sm">
+            🏠 Accueil
+        </a>
+        <a href="{{ route('agent.demandes.index') }}"
+           class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-blue-700 text-sm
+           {{ request()->routeIs('agent.demandes.*') ? 'bg-blue-600 font-semibold' : '' }}">
+            📋 Demandes
+        </a>
+    @elseif(auth()->user()?->role === 'citoyen')
+        <a href="{{ route('citoyen.dashboard') }}"
+           class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-blue-700 text-sm">
+            🏠 Accueil
+        </a>
+        <a href="{{ route('citoyen.demandes.index') }}"
+           class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-blue-700 text-sm
+           {{ request()->routeIs('citoyen.demandes.*') ? 'bg-blue-600 font-semibold' : '' }}">
+            📄 Mes demandes
+        </a>
+        <a href="{{ route('citoyen.demandes.create') }}"
+           class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-blue-700 text-sm">
+            ➕ Nouvelle demande
+        </a>
+    @elseif(auth()->user()?->role === 'admin')
+        <a href="{{ route('admin.dashboard') }}"
+           class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-blue-700 text-sm
+           {{ request()->routeIs('admin.dashboard') ? 'bg-blue-600 font-semibold' : '' }}">
+            🏠 Accueil
+        </a>
+        <a href="{{ route('admin.users') }}"
+           class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-blue-700 text-sm
+           {{ request()->routeIs('admin.users') ? 'bg-blue-600 font-semibold' : '' }}">
+            👥 Utilisateurs
+        </a>
+        <a href="{{ route('admin.type_documents') }}"
+           class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-blue-700 text-sm
+           {{ request()->routeIs('admin.type_documents*') ? 'bg-blue-600 font-semibold' : '' }}">
+            📄 Types documents
+        </a>
+        <a href="{{ route('admin.rapports') }}"
+           class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-blue-700 text-sm
+           {{ request()->routeIs('admin.rapports') ? 'bg-blue-600 font-semibold' : '' }}">
+            📊 Rapports
+        </a>
+    @endif
 
+    {{-- Profil --}}
+    <div class="mt-auto px-3 pt-4 border-t border-blue-700">
+        <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-full bg-white flex items-center justify-center font-bold text-sm text-blue-900">
+                {{ auth()->user()?->prenom[0] }}{{ auth()->user()?->nom[0] }}
+            </div>
+            <div>
+                <p class="text-sm font-medium">{{ auth()->user()?->prenom }}</p>
+                <p class="text-xs text-blue-300 capitalize">{{ auth()->user()?->role }}</p>
+            </div>
+        </div>
+    </div>
+</aside>
                     {{-- Profil --}}
                     <div class="mt-auto px-3 pt-4 border-t border-blue-700">
                         <div class="flex items-center gap-3">

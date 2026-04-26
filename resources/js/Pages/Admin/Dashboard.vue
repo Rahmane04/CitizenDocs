@@ -25,31 +25,35 @@
         </div>
       </div>
 
-      <div class="grid grid-cols-2 gap-5">
-        <div class="bg-white rounded-xl shadow-sm p-6">
-          <h2 class="text-base font-semibold text-gray-700 mb-4">Gestion des comptes</h2>
-          <div class="flex flex-col gap-2">
-            <button class="bg-teal-600 text-white px-4 py-2.5 rounded-lg hover:bg-teal-700 transition text-sm text-left">
-              👥 Voir tous les utilisateurs
-            </button>
-            <button class="border border-gray-200 text-gray-600 px-4 py-2.5 rounded-lg hover:bg-gray-50 transition text-sm text-left">
-              ➕ Ajouter un agent
-            </button>
-          </div>
+ <div class="grid grid-cols-2 gap-4">
+    <div class="bg-white rounded-xl shadow-sm p-6">
+        <h2 class="text-base font-semibold text-gray-700 mb-4">Gestion des comptes</h2>
+        <div class="flex flex-col gap-2">
+            <a href="/admin/users"
+               class="bg-blue-800 text-white px-4 py-2.5 rounded-lg hover:bg-blue-900 transition text-sm text-left">
+                👥 Voir tous les utilisateurs
+            </a>
+            <a href="/admin/users"
+               class="border border-gray-200 text-gray-600 px-4 py-2.5 rounded-lg hover:bg-gray-50 transition text-sm text-left">
+                ➕ Ajouter un agent
+            </a>
         </div>
+    </div>
 
-        <div class="bg-white rounded-xl shadow-sm p-6">
-          <h2 class="text-base font-semibold text-gray-700 mb-4">Types de documents</h2>
-          <div class="flex flex-col gap-2">
-            <button class="bg-blue-600 text-white px-4 py-2.5 rounded-lg hover:bg-blue-700 transition text-sm text-left">
-              📄 Voir les types
-            </button>
-            <button class="border border-gray-200 text-gray-600 px-4 py-2.5 rounded-lg hover:bg-gray-50 transition text-sm text-left">
-              ➕ Ajouter un type
-            </button>
-          </div>
+    <div class="bg-white rounded-xl shadow-sm p-6">
+        <h2 class="text-base font-semibold text-gray-700 mb-4">Types de documents</h2>
+        <div class="flex flex-col gap-2">
+            <a href="/admin/type-documents"
+               class="bg-blue-800 text-white px-4 py-2.5 rounded-lg hover:bg-blue-900 transition text-sm text-left">
+                📄 Voir les types
+            </a>
+            <a href="/admin/type-documents/create"
+               class="border border-gray-200 text-gray-600 px-4 py-2.5 rounded-lg hover:bg-gray-50 transition text-sm text-left">
+                ➕ Ajouter un type
+            </a>
         </div>
-      </div>
+    </div>
+</div>
     </div>
   </MainLayout>
 </template>

@@ -8,7 +8,8 @@
         <form method="POST" action="/logout">
           <input type="hidden" name="_token" :value="csrfToken">
           <button type="submit"
-            class="bg-white text-blue-900 text-sm font-semibold px-4 py-1.5 rounded hover:bg-gray-100 transition"></button>
+            class="bg-white text-blue-900 text-sm font-semibold px-4 py-1.5 rounded hover:bg-gray-100 transition">
+          </button>
         </form>
       </div>
     </header>
@@ -64,22 +65,21 @@ const role = user.value?.role
 const allMenus = {
   citoyen: [
     { label: 'Accueil', href: '/citoyen/dashboard', color: '#1d4ed8', active: true },
-    { label: 'Nouvelle demande', href: '#', color: '#d97706', active: false },
-    { label: 'Mes demandes', href: '#', color: '#2563eb', active: false },
-    { label: 'Mes paiements', href: '#', color: '#7c3aed', active: false },
-    { label: 'Mes documents', href: '#', color: '#059669', active: false },
-  ],
+    { label: 'Nouvelle demande', href: '/citoyen/demandes/create', color: '#d97706', active: false },
+    { label: 'Mes demandes', href: '/citoyen/demandes', color: '#2563eb', active: false },
+    { label: 'Mes paiements', href: '/citoyen/demandes', color: '#7c3aed', active: false },
+    { label: 'Mes documents', href: '/citoyen/demandes', color: '#059669', active: false },
+],
   agent: [
-    { label: 'Accueil', href: '/agent/dashboard', color: '#1d4ed8', active: true },
-    { label: 'Demandes', href: '#', color: '#2563eb', active: false },
-    { label: 'Historique', href: '#', color: '#7c3aed', active: false },
+        { label: 'Accueil', href: '/agent/dashboard', color: '#1d4ed8', active: true },
+    { label: 'Demandes', href: '/agent/demandes', color: '#2563eb', active: false },
   ],
-  admin: [
+admin: [
     { label: 'Accueil', href: '/admin/dashboard', color: '#1d4ed8', active: true },
-    { label: 'Utilisateurs', href: '#', color: '#2563eb', active: false },
-    { label: 'Types documents', href: '#', color: '#d97706', active: false },
-    { label: 'Rapports', href: '#', color: '#059669', active: false },
-  ],
+    { label: 'Utilisateurs', href: '/admin/users', color: '#2563eb', active: false },
+    { label: 'Types documents', href: '/admin/type-documents', color: '#d97706', active: false },
+    { label: 'Rapports', href: '/admin/rapports', color: '#059669', active: false },
+],
 }
 
 const menuItems = computed(() => allMenus[role] || allMenus.citoyen)
