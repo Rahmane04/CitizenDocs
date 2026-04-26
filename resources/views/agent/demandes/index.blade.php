@@ -1,88 +1,72 @@
-@extends('agent.layout')
+@extends('layouts.app')
 
 @section('content')
+<div class="max-w-5xl mx-auto">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6">Liste des demandes</h1>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h4 class="fw-bold">📋steon esd demandes</h4>
-    <span class="text-muted">Connecté : {{ Auth::user()->name }}</span>
-</div>
-
-{{-- Filtres --}}
-<div class="card shadow-sm mb-4">
-    <div class="card-body py-2">
-        <div class="d-flex gap-2 flex-wrap">
-            <span class="fw-semibold me-2 align-self-center">Filtrer :</span>
-            <a href="{{ route('agent.demandes.index') }}"
-               class="btn btn-sm {{ !$statut ? 'btn-primary' : 'btn-outline-primary' }}">
-               Toutes
-            </a>
-            <a href="{{ route('agent.demandes.index', ['statut'=>'en_attente']) }}"
-               class="btn btn-sm {{ $statut==='en_attente' ? 'btn-warning' : 'btn-outline-warning' }}">
-               En attente
-            </a>
-            <a href="{{ route('agent.demandes.index', ['statut'=>'en_cours']) }}"
-               class="btn btn-sm {{ $statut==='en_cours' ? 'btn-info' : 'btn-outline-info' }}">
-               En cours
-            </a>
-            <a href="{{ route('agent.demandes.index', ['statut'=>'validee']) }}"
-               class="btn btn-sm {{ $statut==='validee' ? 'btn-success' : 'btn-outline-success' }}">
-               Validées
-            </a>
-            <a href="{{ route('agent.demandes.index', ['statut'=>'rejetee']) }}"
-               class="btn btn-sm {{ $statut==='rejetee' ? 'btn-danger' : 'btn-outline-danger' }}">
-               Rejetées
-            </a>
-        </div>
+    {{-- Filtres --}}
+    <div class="flex gap-2 mb-6">
+        <a href="{{ route('agent.demandes.index') }}"
+           class="px-4 py-2 rounded-lg text-sm {{ !$statut ? 'bg-blue-800 text-white' : 'border border-gray-300 text-gray-600' }}">
+            Toutes
+        </a>
+        <a href="{{ route('agent.demandes.index', ['statut'=>'en_attente']) }}"
+           class="px-4 py-2 rounded-lg text-sm {{ $statut==='en_attente' ? 'bg-yellow-500 text-white' : 'border border-gray-300 text-gray-600' }}">
+            En attente
+        </a>
+        <a href="{{ route('agent.demandes.index', ['statut'=>'validee']) }}"
+           class="px-4 py-2 rounded-lg text-sm {{ $statut==='validee' ? 'bg-green-600 text-white' : 'border border-gray-300 text-gray-600' }}">
+            Validées
+        </a>
+        <a href="{{ route('agent.demandes.index', ['statut'=>'rejetee']) }}"
+           class="px-4 py-2 rounded-lg text-sm {{ $statut==='rejetee' ? 'bg-red-600 text-white' : 'border border-gray-300 text-gray-600' }}">
+            Rejetées
+        </a>
     </div>
-</div>
 
-{{-- Tableau --}}
-<div class="card shadow-sm">
-    <div class="card-body p-0">
-        <table class="table table-hover mb-0">
-            <thead class="table-dark">
-                <tr>
-                    <th>Référence</th>
-                    <th>Citoyen</th>
-                    <th>Type de document</th>
-                    <th>Date</th>
-                    <th>Statut</th>
-                    <th class="text-center">Action</th>
+    {{-- Tableau --}}
+    <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+        <table class="w-full text-sm">
+            <thead>
+                <tr class="bg-gray-50 border-b text-gray-500">
+                    <th class="py-3 px-4 text-left font-medium">Référence</th>
+                    <th class="py-3 px-4 text-left font-medium">Citoyen</th>
+                    <th class="py-3 px-4 text-left font-medium">Type document</th>
+                    <th class="py-3 px-4 text-left font-medium">Date</th>
+                    <th class="py-3 px-4 text-left font-medium">Statut</th>
+                    <th class="py-3 px-4 text-center font-medium">Action</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($demandes as $demande)
-                <tr>
-                    <td class="fw-semibold text-primary">{{ $demande->reference }}</td>
-                    <td>{{ $demande->citoyen->name }}</td>
-                    <td>{{ $demande->typeDocument->nom }}</td>
-                    <td>{{ $demande->created_at->format('d/m/Y H:i') }}</td>
-                    <td>
+                <tr class="border-b hover:bg-gray-50">
+                    <td class="py-3 px-4 font-semibold text-blue-800">{{ $demande->reference }}</td>
+                    <td class="py-3 px-4">{{ $demande->citoyen->prenom }} {{ $demande->citoyen->nom }}</td>
+                    <td class="py-3 px-4">{{ $demande->typeDocument->nom }}</td>
+                    <td class="py-3 px-4 text-gray-500">{{ $demande->created_at->format('d/m/Y H:i') }}</td>
+                    <td class="py-3 px-4">
                         @switch($demande->statut)
                             @case('en_attente')
-                                <span class="badge bg-warning text-dark">En attente</span>
-                                @break
-                            @case('en_cours')
-                                <span class="badge bg-info text-dark">En cours</span>
+                                <span class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full text-xs">En attente</span>
                                 @break
                             @case('validee')
-                                <span class="badge bg-success">Validée</span>
+                                <span class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs">Validée</span>
                                 @break
                             @case('rejetee')
-                                <span class="badge bg-danger">Rejetée</span>
+                                <span class="bg-red-100 text-red-700 px-2 py-1 rounded-full text-xs">Rejetée</span>
                                 @break
                         @endswitch
                     </td>
-                    <td class="text-center">
+                    <td class="py-3 px-4 text-center">
                         <a href="{{ route('agent.demandes.show', $demande) }}"
-                           class="btn btn-sm btn-outline-primary">
-                            👁️ Voir
+                           class="bg-blue-800 text-white px-3 py-1.5 rounded-lg text-xs hover:bg-blue-900">
+                            Voir
                         </a>
                     </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6" class="text-center text-muted py-4">
+                    <td colspan="6" class="text-center text-gray-400 py-8">
                         Aucune demande trouvée.
                     </td>
                 </tr>
@@ -90,10 +74,9 @@
             </tbody>
         </table>
     </div>
-</div>
 
-<div class="mt-3 d-flex justify-content-center">
-    {{ $demandes->appends(['statut' => $statut])->links() }}
+    <div class="mt-4">
+        {{ $demandes->links() }}
+    </div>
 </div>
-
 @endsection

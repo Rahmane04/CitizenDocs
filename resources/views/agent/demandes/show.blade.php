@@ -1,159 +1,137 @@
-@extends('agent.layout')
+@extends('layouts.app')
 
 @section('content')
+<div class="max-w-5xl mx-auto">
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-        <a href="{{ route('agent.demandes.index') }}"
-           class="btn btn-sm btn-outline-secondary mb-2">← Retour</a>
-        <h4 class="fw-bold mb-0">📄 {{ $demande->reference }}</h4>
+    {{-- Header --}}
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <a href="{{ route('agent.demandes.index') }}"
+               class="text-sm text-gray-500 hover:text-gray-700">← Retour</a>
+            <h1 class="text-2xl font-bold text-gray-800 mt-1">📄 {{ $demande->reference }}</h1>
+        </div>
+        @switch($demande->statut)
+            @case('en_attente')
+                <span class="bg-yellow-100 text-yellow-700 px-3 py-1.5 rounded-full text-sm font-medium">En attente</span>@break
+            @case('validee')
+                <span class="bg-green-100 text-green-700 px-3 py-1.5 rounded-full text-sm font-medium">✅ Validée</span>@break
+            @case('rejetee')
+                <span class="bg-red-100 text-red-700 px-3 py-1.5 rounded-full text-sm font-medium">❌ Rejetée</span>@break
+        @endswitch
     </div>
-    @switch($demande->statut)
-        @case('en_attente')
-            <span class="badge bg-warning text-dark fs-6">En attente</span>@break
-        @case('en_cours')
-            <span class="badge bg-info text-dark fs-6">En cours</span>@break
-        @case('validee')
-            <span class="badge bg-success fs-6">✅ Validée</span>@break
-        @case('rejetee')
-            <span class="badge bg-danger fs-6">❌ Rejetée</span>@break
-    @endswitch
-</div>
 
-<div class="row g-4">
+    <div class="grid grid-cols-2 gap-6">
 
-    {{-- Colonne infos --}}
-    <div class="col-md-6">
-        <div class="card shadow-sm mb-4">
-            <div class="card-header fw-semibold">ℹ️ Informations</div>
-            <div class="card-body">
-                <table class="table table-borderless mb-0">
-                    <tr>
-                        <th class="text-muted" width="40%">Référence</th>
-                        <td class="fw-semibold text-primary">{{ $demande->reference }}</td>
+        {{-- Infos demande --}}
+        <div class="flex flex-col gap-4">
+            <div class="bg-white rounded-xl shadow-sm p-6">
+                <h2 class="text-base font-semibold text-gray-700 mb-4">ℹ️ Informations</h2>
+                <table class="w-full text-sm">
+                    <tr class="border-b">
+                        <td class="py-2 text-gray-500 w-40">Référence</td>
+                        <td class="py-2 font-semibold text-blue-800">{{ $demande->reference }}</td>
                     </tr>
-                    <tr>
-                        <th class="text-muted">Type document</th>
-                        <td>{{ $demande->typeDocument->nom }}</td>
+                    <tr class="border-b">
+                        <td class="py-2 text-gray-500">Type document</td>
+                        <td class="py-2">{{ $demande->typeDocument->nom }}</td>
                     </tr>
-                    <tr>
-                        <th class="text-muted">Déposée le</th>
-                        <td>{{ $demande->created_at->format('d/m/Y à H:i') }}</td>
+                    <tr class="border-b">
+                        <td class="py-2 text-gray-500">Déposée le</td>
+                        <td class="py-2">{{ $demande->created_at->format('d/m/Y à H:i') }}</td>
                     </tr>
                     @if($demande->commentaire)
-                    <tr>
-                        <th class="text-muted">Commentaire</th>
-                        <td>{{ $demande->commentaire }}</td>
+                    <tr class="border-b">
+                        <td class="py-2 text-gray-500">Commentaire</td>
+                        <td class="py-2">{{ $demande->commentaire }}</td>
                     </tr>
                     @endif
                     @if($demande->agent)
                     <tr>
-                        <th class="text-muted">Traité par</th>
-                        <td>{{ $demande->agent->name }}</td>
+                        <td class="py-2 text-gray-500">Traité par</td>
+                        <td class="py-2">{{ $demande->agent->prenom }} {{ $demande->agent->nom }}</td>
                     </tr>
                     @endif
                 </table>
             </div>
-        </div>
 
-        <div class="card shadow-sm">
-            <div class="card-header fw-semibold">👤 Citoyen</div>
-            <div class="card-body">
-                <table class="table table-borderless mb-0">
-                    <tr>
-                        <th class="text-muted" width="40%">Nom</th>
-                        <td>{{ $demande->citoyen->name }}</td>
+            <div class="bg-white rounded-xl shadow-sm p-6">
+                <h2 class="text-base font-semibold text-gray-700 mb-4">👤 Citoyen</h2>
+                <table class="w-full text-sm">
+                    <tr class="border-b">
+                        <td class="py-2 text-gray-500 w-40">Nom</td>
+                        <td class="py-2">{{ $demande->citoyen->prenom }} {{ $demande->citoyen->nom }}</td>
                     </tr>
                     <tr>
-                        <th class="text-muted">Email</th>
-                        <td>{{ $demande->citoyen->email }}</td>
+                        <td class="py-2 text-gray-500">Email</td>
+                        <td class="py-2">{{ $demande->citoyen->email }}</td>
                     </tr>
                 </table>
             </div>
         </div>
-    </div>
 
-    {{-- Colonne traitement --}}
-    <div class="col-md-6">
-        @if(in_array($demande->statut, ['validee', 'rejetee']))
-            <div class="card shadow-sm border-0 text-white
-                {{ $demande->statut === 'validee' ? 'bg-success' : 'bg-danger' }}">
-                <div class="card-body text-center py-5">
-                    <div style="font-size:3rem">
+        {{-- Traitement --}}
+        <div>
+            @if(in_array($demande->statut, ['validee', 'rejetee']))
+                <div class="rounded-xl p-8 text-center text-white
+                    {{ $demande->statut === 'validee' ? 'bg-green-600' : 'bg-red-600' }}">
+                    <div class="text-5xl mb-3">
                         {{ $demande->statut === 'validee' ? '✅' : '❌' }}
                     </div>
-                    <h5 class="fw-bold mt-2">
+                    <h2 class="text-xl font-bold">
                         Demande {{ $demande->statut === 'validee' ? 'validée' : 'rejetée' }}
-                    </h5>
-                    <p class="mb-0 opacity-75">Cette demande ne peut plus être modifiée.</p>
+                    </h2>
+                    <p class="text-sm opacity-75 mt-1">Cette demande ne peut plus être modifiée.</p>
                 </div>
-            </div>
-        @else
-            <div class="card shadow-sm">
-                <div class="card-header fw-semibold">⚙️ Traiter la demande</div>
-                <div class="card-body">
+            @else
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <h2 class="text-base font-semibold text-gray-700 mb-4">⚙️ Traiter la demande</h2>
 
                     @if($errors->any())
-                        <div class="alert alert-danger">
+                        <div class="bg-red-50 text-red-600 p-3 rounded-lg mb-4 text-sm">
                             @foreach($errors->all() as $error)
                                 <div>{{ $error }}</div>
                             @endforeach
                         </div>
                     @endif
 
-                    <form method="POST"
-                          action="{{ route('agent.demandes.traiter', $demande) }}">
+                    <form method="POST" action="{{ route('agent.demandes.traiter', $demande) }}">
                         @csrf
 
                         <div class="mb-4">
-                            <label class="form-label fw-semibold">
-                                Décision <span class="text-danger">*</span>
+                            <label class="text-sm font-semibold text-gray-700 mb-2 block">
+                                Décision <span class="text-red-500">*</span>
                             </label>
-                            <div class="d-flex gap-3">
-                                <div class="flex-fill">
-                                    <input type="radio" class="btn-check"
-                                           name="statut" id="valider" value="validee"
-                                           {{ old('statut')==='validee' ? 'checked' : '' }} required>
-                                    <label class="btn btn-outline-success w-100" for="valider">
-                                        ✅ Valider
-                                    </label>
-                                </div>
-                                <div class="flex-fill">
-                                    <input type="radio" class="btn-check"
-                                           name="statut" id="rejeter" value="rejetee"
-                                           {{ old('statut')==='rejetee' ? 'checked' : '' }}>
-                                    <label class="btn btn-outline-danger w-100" for="rejeter">
-                                        ❌ Rejeter
-                                    </label>
-                                </div>
+                            <div class="flex gap-3">
+                                <label class="flex-1 border-2 border-green-500 rounded-lg p-3 text-center cursor-pointer hover:bg-green-50">
+                                    <input type="radio" name="statut" value="validee" class="mr-1"
+                                        {{ old('statut')==='validee' ? 'checked' : '' }} required>
+                                    ✅ Valider
+                                </label>
+                                <label class="flex-1 border-2 border-red-500 rounded-lg p-3 text-center cursor-pointer hover:bg-red-50">
+                                    <input type="radio" name="statut" value="rejetee" class="mr-1"
+                                        {{ old('statut')==='rejetee' ? 'checked' : '' }}>
+                                    ❌ Rejeter
+                                </label>
                             </div>
                         </div>
 
                         <div class="mb-4">
-                            <label for="commentaire" class="form-label fw-semibold">
-                                Commentaire
-                                <small class="text-muted fw-normal">(optionnel)</small>
+                            <label class="text-sm font-semibold text-gray-700 mb-2 block">
+                                Commentaire <span class="text-gray-400 font-normal">(optionnel)</span>
                             </label>
-                            <textarea name="commentaire" id="commentaire" rows="4"
-                                class="form-control @error('commentaire') is-invalid @enderror"
+                            <textarea name="commentaire" rows="4"
+                                class="w-full border border-gray-300 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 placeholder="Expliquer la décision au citoyen...">{{ old('commentaire') }}</textarea>
-                            @error('commentaire')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
                         </div>
 
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary btn-lg">
-                                Confirmer le traitement
-                            </button>
-                        </div>
-
+                        <button type="submit"
+                            class="w-full bg-blue-800 text-white py-3 rounded-lg font-semibold hover:bg-blue-900 transition">
+                            Confirmer le traitement
+                        </button>
                     </form>
                 </div>
-            </div>
-        @endif
+            @endif
+        </div>
     </div>
-
 </div>
-
 @endsection
