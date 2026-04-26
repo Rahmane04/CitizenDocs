@@ -8,6 +8,9 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
+    <script>
+        window.authUser = @json(auth()->user())
+    </script>
     <div id="app"></div>
 </body>
 </html>

@@ -28,7 +28,9 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
 */
 Route::middleware(['auth', 'role:citoyen'])->prefix('citoyen')->name('citoyen.')->group(function () {
     Route::get('/dashboard', function() {
-        return view('layouts.app');
+        return view('layouts.app', [
+            'user' => auth()->user()
+        ]);
     })->name('dashboard');
 });
 
@@ -38,7 +40,9 @@ Route::middleware(['auth', 'role:citoyen'])->prefix('citoyen')->name('citoyen.')
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'role:agent'])->prefix('agent')->name('agent.')->group(function () {
-    Route::get('/dashboard', fn() => view('agent.dashboard'))->name('dashboard');
+    Route::get('/dashboard', function() {
+        return view('layouts.app', ['user' => auth()->user()]);
+    })->name('dashboard');
 });
 
 /*
@@ -47,5 +51,7 @@ Route::middleware(['auth', 'role:agent'])->prefix('agent')->name('agent.')->grou
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', fn() => view('admin.dashboard'))->name('dashboard');
+    Route::get('/dashboard', function() {
+        return view('layouts.app', ['user' => auth()->user()]);
+    })->name('dashboard');
 });
