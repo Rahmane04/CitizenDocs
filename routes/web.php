@@ -6,6 +6,8 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\DemandeController;
 use App\Http\Controllers\Agent\TraitementController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\PaiementController;
+use App\Http\Controllers\DocumentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,6 +38,9 @@ Route::middleware(['auth', 'role:citoyen'])->prefix('citoyen')->name('citoyen.')
     Route::get('/demandes', [DemandeController::class, 'index'])->name('demandes.index');
     Route::get('/demandes/create', [DemandeController::class, 'create'])->name('demandes.create');
     Route::post('/demandes', [DemandeController::class, 'store'])->name('demandes.store');
+    Route::get('/demandes/{demande}/payer', [PaiementController::class, 'create'])->name('paiements.create');
+    Route::post('/demandes/{demande}/payer', [PaiementController::class, 'store'])->name('paiements.store');
+    Route::get('/demandes/{demande}/telecharger', [DocumentController::class, 'download'])->name('documents.download');
 });
 
 /*
