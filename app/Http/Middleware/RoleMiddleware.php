@@ -7,10 +7,10 @@ use Illuminate\Http\Request;
 
 class RoleMiddleware
 {
-    public function handle(Request $request, Closure $next, string $role): mixed
+    public function handle(Request $request, Closure $next, string $role)
     {
         if (!auth()->check() || auth()->user()->role !== $role) {
-            abort(403, 'Accès non autorisé');
+            abort(403, 'Accès non autorisé.');
         }
 
         return $next($request);

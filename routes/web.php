@@ -3,7 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
-use Inertia\Inertia;
+use App\Http\Controllers\DemandeController;
+
 /*
 |--------------------------------------------------------------------------
 | Routes publiques
@@ -28,10 +29,11 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
 */
 Route::middleware(['auth', 'role:citoyen'])->prefix('citoyen')->name('citoyen.')->group(function () {
     Route::get('/dashboard', function() {
-        return view('layouts.app', [
-            'user' => auth()->user()
-        ]);
+        return view('layouts.app', ['user' => auth()->user()]);
     })->name('dashboard');
+    Route::get('/demandes', [DemandeController::class, 'index'])->name('demandes.index');
+    Route::get('/demandes/create', [DemandeController::class, 'create'])->name('demandes.create');
+    Route::post('/demandes', [DemandeController::class, 'store'])->name('demandes.store');
 });
 
 /*
