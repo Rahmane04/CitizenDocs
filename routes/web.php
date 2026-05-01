@@ -8,6 +8,7 @@ use App\Http\Controllers\Agent\TraitementController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\PaiementController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\Auth\OtpController;
 
 /*
 |--------------------------------------------------------------------------
@@ -75,4 +76,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::put('/type-documents/{typeDocument}', [AdminController::class, 'updateTypeDocument'])->name('type_documents.update');
     Route::delete('/type-documents/{typeDocument}', [AdminController::class, 'destroyTypeDocument'])->name('type_documents.destroy');
     Route::get('/rapports', [AdminController::class, 'rapports'])->name('rapports');
+    Route::get('/agents/create', [AdminController::class, 'createAgent'])->name('agents.create');
+    Route::post('/agents', [AdminController::class, 'storeAgent'])->name('agents.store');
 });
+
+Route::get('/verify-otp', [OtpController::class, 'show'])->name('verify.otp');
+Route::post('/verify-otp', [OtpController::class, 'verify'])->name('verify.otp.submit');

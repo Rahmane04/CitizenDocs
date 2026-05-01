@@ -51,6 +51,9 @@
                class="border border-gray-200 text-gray-600 px-4 py-2.5 rounded-lg hover:bg-gray-50 transition text-sm text-left">
                 ➕ Ajouter un type
             </a>
+            <a href="/admin/agents/create"class="border border-gray-200 text-gray-600 px-4 py-2.5 rounded-lg hover:bg-gray-50 transition text-sm text-left">
+              ➕ Ajouter un agent
+            </a>
         </div>
     </div>
 </div>

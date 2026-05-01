@@ -41,6 +41,35 @@ class AdminController extends Controller
         return back()->with('success', "Compte {$newStatut} avec succès.");
     }
 
+public function createAgent()
+{
+    return view('admin.agents.create');
+}
+
+public function storeAgent(Request $request)
+{
+    $request->validate([
+        'nom'       => 'required|string|max:255',
+        'prenom'    => 'required|string|max:255',
+        'email'     => 'required|string|email|max:255|unique:users',
+        'password'  => 'required|confirmed|min:8',
+        'telephone' => 'nullable|string|max:20',
+    ]);
+
+    User::create([
+        'nom'       => $request->nom,
+        'prenom'    => $request->prenom,
+        'email'     => $request->email,
+        'password'  => Hash::make($request->password),
+        'telephone' => $request->telephone,
+        'role'      => 'agent',
+        'statut'    => 'actif',
+    ]);
+
+    return redirect()->route('admin.users')
+        ->with('success', 'Compte agent créé avec succès !');
+}
+
     // ── Types de documents ─────────────────────────
     public function typeDocuments()
     {

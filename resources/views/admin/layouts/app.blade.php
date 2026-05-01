@@ -11,7 +11,7 @@
     </script>
 </head>
 <body class="bg-gray-50">
-    @if(request()->is('citoyen/dashboard') || request()->is('agent/dashboard') || request()->is('admin/dashboard'))
+    @if(in_array(request()->path(), ['citoyen/dashboard', 'agent/dashboard', 'admin/dashboard']))
         <div id="app"></div>
     @else
         <div class="min-h-screen flex flex-col">
