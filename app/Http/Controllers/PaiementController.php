@@ -35,4 +35,13 @@ class PaiementController extends Controller
         return redirect()->route('citoyen.demandes.index')
             ->with('success', 'Paiement effectué avec succès !');
     }
+    public function index()
+{
+    $paiements = auth()->user()->demandes()
+        ->with(['paiement', 'typeDocument'])
+        ->whereHas('paiement')
+        ->get();
+
+    return view('citoyen.paiements.index', compact('paiements'));
+}
 }

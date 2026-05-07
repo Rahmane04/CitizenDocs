@@ -8,118 +8,137 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script>
         window.authUser = @json(auth()->user())
+        window.dashboardStats = @json($stats ?? ['en_attente' => 0, 'validee' => 0, 'rejetee' => 0])
     </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+        * { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
 </head>
-<body class="bg-gray-50">
-    @if(in_array(request()->path(), ['citoyen/dashboard', 'agent/dashboard', 'admin/dashboard']))
-        <div id="app"></div>
-    @else
-        {{-- Layout Blade pour les autres pages --}}
-        <div class="min-h-screen flex flex-col">
-            {{-- Header --}}
-            <header class="bg-blue-900 text-white px-6 py-3 flex justify-between items-center shadow">
-                <span class="text-xl font-bold">🏛️ CitizenDocs</span>
-                <div class="flex items-center gap-4">
-                    <span class="text-sm text-blue-200">{{ auth()->user()?->prenom }} {{ auth()->user()?->nom }}</span>
-                    <form method="POST" action="/logout">
-                        @csrf
-                        <button class="bg-white text-blue-900 text-sm font-semibold px-4 py-1.5 rounded hover:bg-gray-100">
-                            Déconnexion
-                        </button>
-                    </form>
-                </div>
-            </header>
+<body class="bg-slate-50">
 
-            <div class="flex flex-1">
-                {{-- Sidebar --}}
-                <aside class="w-60 bg-blue-800 text-white flex flex-col py-6 px-3">
-    <p class="text-xs text-blue-300 uppercase tracking-widest font-semibold px-3 mb-4">Navigation</p>
+@if(in_array(request()->path(), ['citoyen/dashboard', 'agent/dashboard', 'admin/dashboard']))
+    <div id="app"></div>
+@else
 
-    @if(auth()->user()?->role === 'agent')
-        <a href="{{ route('agent.dashboard') }}"
-           class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-blue-700 text-sm">
-            🏠 Accueil
-        </a>
-        <a href="{{ route('agent.demandes.index') }}"
-           class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-blue-700 text-sm
-           {{ request()->routeIs('agent.demandes.*') ? 'bg-blue-600 font-semibold' : '' }}">
-            📋 Demandes
-        </a>
-    @elseif(auth()->user()?->role === 'citoyen')
-        <a href="{{ route('citoyen.dashboard') }}"
-           class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-blue-700 text-sm">
-            🏠 Accueil
-        </a>
-        <a href="{{ route('citoyen.demandes.index') }}"
-           class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-blue-700 text-sm
-           {{ request()->routeIs('citoyen.demandes.*') ? 'bg-blue-600 font-semibold' : '' }}">
-            📄 Mes demandes
-        </a>
-        <a href="{{ route('citoyen.demandes.create') }}"
-           class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-blue-700 text-sm">
-            ➕ Nouvelle demande
-        </a>
-    @elseif(auth()->user()?->role === 'admin')
-        <a href="{{ route('admin.dashboard') }}"
-           class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-blue-700 text-sm
-           {{ request()->routeIs('admin.dashboard') ? 'bg-blue-600 font-semibold' : '' }}">
-            🏠 Accueil
-        </a>
-        <a href="{{ route('admin.users') }}"
-           class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-blue-700 text-sm
-           {{ request()->routeIs('admin.users') ? 'bg-blue-600 font-semibold' : '' }}">
-            👥 Utilisateurs
-        </a>
-        <a href="{{ route('admin.type_documents') }}"
-           class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-blue-700 text-sm
-           {{ request()->routeIs('admin.type_documents*') ? 'bg-blue-600 font-semibold' : '' }}">
-            📄 Types documents
-        </a>
-        <a href="{{ route('admin.rapports') }}"
-           class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-blue-700 text-sm
-           {{ request()->routeIs('admin.rapports') ? 'bg-blue-600 font-semibold' : '' }}">
-            📊 Rapports
-        </a>
-    @endif
+<div class="min-h-screen flex flex-col">
 
-    {{-- Profil --}}
-    <div class="mt-auto px-3 pt-4 border-t border-blue-700">
-        <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-full bg-white flex items-center justify-center font-bold text-sm text-blue-900">
-                {{ auth()->user()?->prenom[0] }}{{ auth()->user()?->nom[0] }}
-            </div>
-            <div>
-                <p class="text-sm font-medium">{{ auth()->user()?->prenom }}</p>
-                <p class="text-xs text-blue-300 capitalize">{{ auth()->user()?->role }}</p>
-            </div>
-        </div>
-    </div>
-</aside>
-                    {{-- Profil --}}
-                    <div class="mt-auto px-3 pt-4 border-t border-blue-700">
-                        <div class="flex items-center gap-3">
-                            <div class="w-9 h-9 rounded-full bg-white flex items-center justify-center font-bold text-sm text-blue-900">
-                                {{ auth()->user()?->prenom[0] }}{{ auth()->user()?->nom[0] }}
-                            </div>
-                            <div>
-                                <p class="text-sm font-medium">{{ auth()->user()?->prenom }}</p>
-                                <p class="text-xs text-blue-300 capitalize">{{ auth()->user()?->role }}</p>
-                            </div>
-                        </div>
+    {{-- NAVBAR --}}
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-8">
+                <a href="#" class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-sky-600 rounded-lg flex items-center justify-center">
+                        <span class="text-white text-sm font-bold">C</span>
                     </div>
-                </aside>
+                    <span class="text-slate-800 font-bold text-lg tracking-tight">CitizenDocs</span>
+                </a>
 
-                {{-- Contenu --}}
-                <main class="flex-1 p-6">
-                    @if(session('success'))
-                        <div class="bg-green-50 text-green-700 border border-green-200 rounded-lg p-4 mb-4 text-sm">
-                            ✅ {{ session('success') }}
-                        </div>
+                {{-- Menu navigation --}}
+                <nav class="flex items-center gap-1">
+                    @if(auth()->user()?->role === 'citoyen')
+                    <a href="{{ route('citoyen.dashboard') }}"
+                    class="px-3 py-2 rounded-lg text-sm font-medium transition
+                    {{ request()->routeIs('citoyen.dashboard') ? 'bg-sky-50 text-sky-700' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100' }}">
+                     Accueil
+                    </a>
+                    <a href="{{ route('citoyen.demandes.create') }}"
+                    class="px-3 py-2 rounded-lg text-sm font-medium transition
+                    {{ request()->routeIs('citoyen.demandes.create') ? 'bg-sky-50 text-sky-700' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100' }}">
+                     Nouvelle demande
+                    </a>
+                    <a href="{{ route('citoyen.demandes.index') }}"
+                    class="px-3 py-2 rounded-lg text-sm font-medium transition
+                    {{ request()->routeIs('citoyen.demandes.index') ? 'bg-sky-50 text-sky-700' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100' }}">
+                     Mes demandes
+                    </a>
+                    <a href="{{ route('citoyen.paiements.index') }}"class="px-3 py-2 rounded-lg text-sm font-medium transition{{ request()->routeIs('citoyen.paiements.index') ? 'bg-sky-50 text-sky-700' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100' }}">Mes paiements
+                    </a>
+                    <a href="{{ route('citoyen.documents.index') }}"
+                    class="px-3 py-2 rounded-lg text-sm font-medium transition{{ request()->routeIs('citoyen.documents.index') ? 'bg-sky-50 text-sky-700' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100' }}">Mes documents</a>
+                         @elseif(auth()->user()?->role === 'agent')
+                        <a href="{{ route('agent.dashboard') }}"
+                           class="px-3 py-2 rounded-lg text-sm font-medium transition
+                           {{ request()->routeIs('agent.dashboard') ? 'bg-sky-50 text-sky-700' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100' }}">
+                            Accueil
+                        </a>
+                        <a href="{{ route('agent.demandes.index') }}"
+                           class="px-3 py-2 rounded-lg text-sm font-medium transition
+                           {{ request()->routeIs('agent.demandes.*') ? 'bg-sky-50 text-sky-700' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100' }}">
+                            Demandes
+                        </a>
+
+                    @elseif(auth()->user()?->role === 'admin')
+                        <a href="{{ route('admin.dashboard') }}"
+                           class="px-3 py-2 rounded-lg text-sm font-medium transition
+                           {{ request()->routeIs('admin.dashboard') ? 'bg-sky-50 text-sky-700' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100' }}">
+                            Accueil
+                        </a>
+                        <a href="{{ route('admin.users') }}"
+                           class="px-3 py-2 rounded-lg text-sm font-medium transition
+                           {{ request()->routeIs('admin.users') ? 'bg-sky-50 text-sky-700' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100' }}">
+                            Utilisateurs
+                        </a>
+                        <a href="{{ route('admin.type_documents') }}"
+                           class="px-3 py-2 rounded-lg text-sm font-medium transition
+                           {{ request()->routeIs('admin.type_documents*') ? 'bg-sky-50 text-sky-700' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100' }}">
+                            Types documents
+                        </a>
+                        <a href="{{ route('admin.rapports') }}"
+                           class="px-3 py-2 rounded-lg text-sm font-medium transition
+                           {{ request()->routeIs('admin.rapports') ? 'bg-sky-50 text-sky-700' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100' }}">
+                            Rapports
+                        </a>
                     @endif
-                    @yield('content')
-                </main>
+                </nav>
+            </div>
+
+            {{-- Profil + déconnexion --}}
+            <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-full bg-sky-100 flex items-center justify-center text-sky-700 font-bold text-sm">
+                        {{ auth()->user()?->prenom[0] }}{{ auth()->user()?->nom[0] }}
+                    </div>
+                    <div class="hidden md:block">
+                        <p class="text-sm font-medium text-slate-700">{{ auth()->user()?->prenom }} {{ auth()->user()?->nom }}</p>
+                        <p class="text-xs text-slate-400 capitalize">{{ auth()->user()?->role }}</p>
+                    </div>
+                </div>
+                <form method="POST" action="/logout">
+                    @csrf
+                    <button class="text-sm text-slate-500 hover:text-red-600 transition font-medium px-3 py-1.5 rounded-lg hover:bg-red-50">
+                        Déconnexion
+                    </button>
+                </form>
             </div>
         </div>
-    @endif
+    </header>
+
+    {{-- CONTENU --}}
+    <main class="flex-1 max-w-7xl mx-auto w-full px-6 py-8">
+        @if(session('success'))
+            <div class="bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-xl p-4 mb-6 text-sm flex items-center gap-2">
+                <span>✅</span> {{ session('success') }}
+            </div>
+        @endif
+        @if(session('error'))
+            <div class="bg-red-50 text-red-600 border border-red-200 rounded-xl p-4 mb-6 text-sm flex items-center gap-2">
+                <span>❌</span> {{ session('error') }}
+            </div>
+        @endif
+        @yield('content')
+    </main>
+
+    {{-- FOOTER --}}
+    <footer class="border-t border-slate-200 bg-white py-4">
+        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+            <p class="text-xs text-slate-400">© 2026 CitizenDocs — Gestion de documents administratifs</p>
+            <p class="text-xs text-slate-400 capitalize">Connecté en tant que <span class="font-medium text-slate-600">{{ auth()->user()?->role }}</span></p>
+        </div>
+    </footer>
+
+</div>
+
+@endif
 </body>
 </html>

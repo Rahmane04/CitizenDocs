@@ -43,4 +43,9 @@ class DocumentController extends Controller
             ->header('Content-Type', 'text/plain')
             ->header('Content-Disposition', 'attachment; filename="' . $demande->reference . '.txt"');
     }
+    public function index()
+    {
+        $demandes = auth()->user()->demandes()->with(['typeDocument', 'document'])->where('statut', 'validee')->get();
+    return view('citoyen.documents.index', compact('demandes'));
+}
 }

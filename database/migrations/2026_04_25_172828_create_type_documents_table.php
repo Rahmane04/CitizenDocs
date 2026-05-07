@@ -18,7 +18,7 @@ return new class extends Migration
             $table->decimal('prix', 10, 2);
             $table->integer('delai_traitement'); // en jours
             $table->timestamps();
-});
+            });
     }
 
     /**

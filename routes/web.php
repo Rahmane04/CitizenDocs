@@ -26,7 +26,15 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout')->middleware('auth');
-
+// Redirection intelligente après login
+Route::get('/dashboard', function() {
+    $role = auth()->user()->role;
+    return match($role) {
+        'admin'  => redirect()->route('admin.dashboard'),
+        'agent'  => redirect()->route('agent.dashboard'),
+        default  => redirect()->route('citoyen.dashboard'),
+    };
+})->middleware('auth')->name('dashboard');
 /*
 |--------------------------------------------------------------------------
 | Routes Citoyen
@@ -34,14 +42,25 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
 */
 Route::middleware(['auth', 'role:citoyen'])->prefix('citoyen')->name('citoyen.')->group(function () {
     Route::get('/dashboard', function() {
-        return view('layouts.app', ['user' => auth()->user()]);
-    })->name('dashboard');
+    $user = auth()->user();
+    $stats = [
+        'en_attente' => $user->demandes()->where('statut', 'en_attente')->count(),
+        'validee'    => $user->demandes()->where('statut', 'validee')->count(),
+        'rejetee'    => $user->demandes()->where('statut', 'rejetee')->count(),
+    ];
+    return view('layouts.app', [
+        'user'  => $user,
+        'stats' => $stats
+    ]);
+})->name('dashboard');
     Route::get('/demandes', [DemandeController::class, 'index'])->name('demandes.index');
     Route::get('/demandes/create', [DemandeController::class, 'create'])->name('demandes.create');
     Route::post('/demandes', [DemandeController::class, 'store'])->name('demandes.store');
     Route::get('/demandes/{demande}/payer', [PaiementController::class, 'create'])->name('paiements.create');
     Route::post('/demandes/{demande}/payer', [PaiementController::class, 'store'])->name('paiements.store');
     Route::get('/demandes/{demande}/telecharger', [DocumentController::class, 'download'])->name('documents.download');
+    Route::get('/paiements', [PaiementController::class, 'index'])->name('paiements.index');
+    Route::get('/documents', [DocumentController::class, 'index'])->name('documents.index');
 });
 
 /*

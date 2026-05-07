@@ -15,9 +15,19 @@ class AuthenticatedSessionController extends Controller
         return view('auth.login');
     }
 
-public function store(LoginRequest $request)
+public function store(Request $request)
 {
-    $request->authenticate();
+    $request->validate([
+        'email'    => 'required|email',
+        'password' => 'required',
+    ]);
+
+    if (!Auth::attempt($request->only('email', 'password'))) {
+        return back()->withErrors([
+            'email' => 'Email ou mot de passe incorrect.',
+        ]);
+    }
+
     $request->session()->regenerate();
 
     $role = auth()->user()->role;
