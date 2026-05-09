@@ -74,8 +74,8 @@ const allMenus = {
     { label: 'Accueil', href: '/citoyen/dashboard', active: true },
     { label: 'Nouvelle demande', href: '/citoyen/demandes/create', active: false },
     { label: 'Mes demandes', href: '/citoyen/demandes', active: false },
-    { label: 'Mes paiements', href: '/citoyen/demandes', active: false },
-    { label: 'Mes documents', href: '/citoyen/demandes', active: false },
+    { label: 'Mes paiements', href: '/citoyen/paiements', active: false },
+    { label: 'Mes documents', href: '/citoyen/documents', active: false },
   ],
   agent: [
     { label: 'Accueil', href: '/agent/dashboard', active: true },

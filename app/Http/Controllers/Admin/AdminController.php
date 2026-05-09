@@ -71,11 +71,11 @@ public function storeAgent(Request $request)
 }
 
     // ── Types de documents ─────────────────────────
-    public function typeDocuments()
-    {
-        $types = TypeDocument::orderBy('nom')->paginate(10);
-        return view('admin.type_documents.index', compact('types'));
-    }
+public function typeDocuments()
+{
+    $typeDocuments = TypeDocument::orderBy('nom')->paginate(10);
+    return view('admin.type_documents.index', compact('typeDocuments'));
+}
 
     public function createTypeDocument()
     {

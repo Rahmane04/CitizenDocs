@@ -18,7 +18,7 @@
 <body class="bg-slate-50">
 
 @if(in_array(request()->path(), ['citoyen/dashboard', 'agent/dashboard', 'admin/dashboard']))
-    <div id="app"></div>
+<div id="app" data-role="{{ auth()->user()?->role }}" data-user="{{ json_encode(auth()->user()) }}"></div>
 @else
 
 <div class="min-h-screen flex flex-col">
