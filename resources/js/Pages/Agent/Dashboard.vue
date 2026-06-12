@@ -9,15 +9,15 @@
       <div class="grid grid-cols-3 gap-5 mb-8">
         <div class="bg-white rounded-xl shadow-sm p-5 border-l-4 border-yellow-400">
           <p class="text-sm text-gray-500">En attente</p>
-          <p class="text-3xl font-bold text-gray-800 mt-1">0</p>
+          <p class="text-3xl font-bold text-gray-800 mt-1">{{ stats.en_attente }}</p>
         </div>
         <div class="bg-white rounded-xl shadow-sm p-5 border-l-4 border-green-500">
           <p class="text-sm text-gray-500">Validées</p>
-          <p class="text-3xl font-bold text-gray-800 mt-1">0</p>
+          <p class="text-3xl font-bold text-gray-800 mt-1">{{ stats.validee }}</p>
         </div>
         <div class="bg-white rounded-xl shadow-sm p-5 border-l-4 border-red-400">
           <p class="text-sm text-gray-500">Rejetées</p>
-          <p class="text-3xl font-bold text-gray-800 mt-1">0</p>
+          <p class="text-3xl font-bold text-gray-800 mt-1">0{{ stats.rejetee }}</p>
         </div>
       </div>
 
@@ -45,10 +45,10 @@
     </div>
   </MainLayout>
 </template>
-
 <script setup>
 import { ref } from 'vue'
 import MainLayout from '@/Layouts/MainLayout.vue'
 
 const user = ref(window.authUser || null)
+const stats = ref(window.dashboardStats || { en_attente: 0, validee: 0, rejetee: 0 })
 </script>

@@ -70,8 +70,17 @@ Route::middleware(['auth', 'role:citoyen'])->prefix('citoyen')->name('citoyen.')
 */
 Route::middleware(['auth', 'role:agent'])->prefix('agent')->name('agent.')->group(function () {
     Route::get('/dashboard', function() {
-        return view('layouts.app', ['user' => auth()->user()]);
-    })->name('dashboard');
+    $user = auth()->user();
+    $stats = [
+        'en_attente' => \App\Models\Demande::where('statut', 'en_attente')->count(),
+        'validee'    => \App\Models\Demande::where('agent_id', $user->id)->where('statut', 'validee')->count(),
+        'rejetee'    => \App\Models\Demande::where('agent_id', $user->id)->where('statut', 'rejetee')->count(),
+    ];
+    return view('layouts.app', [
+        'user'  => $user,
+        'stats' => $stats
+    ]);
+})->name('dashboard');
     Route::get('/demandes', [TraitementController::class, 'index'])->name('demandes.index');
     Route::get('/demandes/{demande}', [TraitementController::class, 'show'])->name('demandes.show');
     Route::post('/demandes/{demande}/traiter', [TraitementController::class, 'traiter'])->name('demandes.traiter');
@@ -83,9 +92,23 @@ Route::middleware(['auth', 'role:agent'])->prefix('agent')->name('agent.')->grou
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', function() {
-        return view('layouts.app', ['user' => auth()->user()]);
-    })->name('dashboard');
+Route::get('/dashboard', function() {
+    $user = auth()->user();
+    $stats = [
+        'total_demandes'      => \App\Models\Demande::count(),
+        'total_citoyens'      => \App\Models\User::where('role', 'citoyen')->count(),
+        'total_agents'        => \App\Models\User::where('role', 'agent')->count(),
+        'total_paiements'     => \App\Models\Paiement::sum('montant'),
+        'demandes_par_statut' => \App\Models\Demande::selectRaw('statut, count(*) as total')
+                                    ->groupBy('statut')->get(),
+        'paiements_par_mois'  => \App\Models\Paiement::selectRaw('MONTH(created_at) as mois, SUM(montant) as total')
+                                    ->groupBy('mois')->orderBy('mois')->get(),
+    ];
+    return view('layouts.app', [
+        'user'  => $user,
+        'stats' => $stats
+    ]);
+})->name('dashboard');
     Route::get('/users', [AdminController::class, 'users'])->name('users');
     Route::post('/users/{user}/toggle', [AdminController::class, 'toggleUser'])->name('users.toggle');
     Route::get('/type-documents', [AdminController::class, 'typeDocuments'])->name('type_documents');
