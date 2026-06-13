@@ -30,7 +30,7 @@
         </div>
 
         <button type="submit"
-                class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition">
+                class="w-full bg-sky-600 text-white py-3 px-6 font-semibold rounded-xl hover:bg-sky-700 active:scale-98 transition-all shadow-md shadow-sky-100 border border-sky-600 hover:shadow-lg">
             Soumettre la demande
         </button>
     </form>

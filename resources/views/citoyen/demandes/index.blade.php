@@ -5,8 +5,11 @@
     <div class="flex justify-between items-center mb-6">
         <h2 class="text-2xl font-bold text-gray-800">Mes demandes</h2>
         <a href="{{ route('citoyen.demandes.create') }}"
-           class="bg-blue-800 text-white px-4 py-2 rounded-lg hover:bg-blue-900 transition text-sm font-medium">
-            + Nouvelle demande
+           class="inline-flex items-center gap-2 px-6 py-3 bg-sky-600 text-white text-sm font-semibold rounded-xl hover:bg-sky-700 active:scale-95 transition-all shadow-md shadow-sky-200 border border-sky-600 hover:shadow-lg">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+            Nouvelle demande
         </a>
     </div>
 
@@ -70,16 +73,16 @@
                                 {{-- Bouton Payer si pas encore payé --}}
                                 @if(!$demande->paiement)
                                     <a href="{{ route('citoyen.paiements.create', $demande) }}"
-                                       class="bg-orange-500 text-white px-3 py-1.5 rounded-lg text-xs hover:bg-orange-600 transition">
-                                        💳 Payer
+                                       class="inline-flex items-center justify-center bg-orange-500 text-white px-4 py-2 rounded-xl text-xs font-semibold hover:bg-orange-600 active:scale-95 transition-all shadow-sm shadow-orange-100">
+                                        Payer
                                     </a>
                                 @endif
 
                                 {{-- Bouton Télécharger si validée --}}
                                 @if($demande->statut === 'validee')
                                     <a href="{{ route('citoyen.documents.download', $demande) }}"
-                                       class="bg-green-600 text-white px-3 py-1.5 rounded-lg text-xs hover:bg-green-700 transition">
-                                        ⬇️ Télécharger
+                                       class="inline-flex items-center justify-center bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-semibold hover:bg-emerald-700 active:scale-95 transition-all shadow-sm shadow-green-100">
+                                        Télécharger
                                     </a>
                                 @endif
                             </div>
